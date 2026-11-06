@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GameFocus - one library for all your games</title>
+  <meta name="description" content="GameFocus gathers your games from Steam, Epic, Riot, Xbox, GOG, Ubisoft and more into one library, tracks play time and helps you set gaming goals.">
+  <link rel="icon" href="logo.png">
+  <style>
+    :root {
+      --bg: #0d1321;
+      --panel: #151d33;
+      --line: #25314f;
+      --text: #e8ecf6;
+      --muted: #9aa6c4;
+      --accent: #7cf3ff;
+      --accent2: #a78bfa;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(1200px 600px at 50% -10%, #1f2a44 0%, var(--bg) 60%);
+      color: var(--text);
+      font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+      line-height: 1.6;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+    header.hero { text-align: center; padding: 88px 0 56px; }
+    header.hero img { width: 120px; height: 120px; border-radius: 28px; box-shadow: 0 18px 48px rgba(124, 243, 255, .18); }
+    h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); margin: 22px 0 10px; letter-spacing: -.02em; }
+    .tagline { color: var(--muted); font-size: 1.15rem; max-width: 640px; margin: 0 auto 30px; }
+    .actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-block; padding: 13px 26px; border-radius: 12px; font-weight: 600;
+      background: linear-gradient(90deg, var(--accent), var(--accent2)); color: #0b1020;
+    }
+    .btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
+    .btn:hover { text-decoration: none; filter: brightness(1.08); }
+    .meta { color: var(--muted); font-size: .9rem; margin-top: 18px; }
+
+    section { padding: 48px 0; }
+    h2 { font-size: 1.6rem; margin: 0 0 22px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
+    .card h3 { margin: 0 0 8px; font-size: 1.05rem; }
+    .card p { margin: 0; color: var(--muted); font-size: .95rem; }
+    .icon { font-size: 1.5rem; margin-bottom: 8px; }
+
+    .platforms { display: flex; flex-wrap: wrap; gap: 10px; }
+    .chip { background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; font-size: .92rem; }
+    .chip.todo { color: var(--muted); border-style: dashed; }
+    .note { color: var(--muted); font-size: .92rem; margin-top: 14px; }
+
+    .steps { counter-reset: s; list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+    .steps li { counter-increment: s; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px 16px 62px; position: relative; color: var(--muted); }
+    .steps li::before {
+      content: counter(s); position: absolute; left: 18px; top: 14px; width: 30px; height: 30px; border-radius: 50%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2)); color: #0b1020; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    code { background: #0b1020; border: 1px solid var(--line); padding: 2px 7px; border-radius: 6px; color: var(--text); }
+
+    footer { border-top: 1px solid var(--line); padding: 28px 0 40px; color: var(--muted); font-size: .9rem; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <header class="hero">
+    <div class="wrap">
+      <img src="logo.png" alt="GameFocus logo">
+      <h1>GameFocus</h1>
+      <p class="tagline">One library for all your games, wherever they are installed. Track your play time and set goals that stick.</p>
+      <div class="actions">
+        <a class="btn" href="https://github.com/DITONGO21/GameFocus/releases/latest">Download for Windows</a>
+        <a class="btn ghost" href="https://github.com/DITONGO21/GameFocus">View on GitHub</a>
+      </div>
+      <p class="meta">Windows 10 and 11 · Free and open source (MIT)</p>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <h2>Why GameFocus?</h2>
+      <div class="grid">
+        <div class="card"><div class="icon">📚</div><h3>One library</h3><p>Games from many launchers are gathered in a single list, without duplicates.</p></div>
+        <div class="card"><div class="icon">⏱️</div><h3>Play time tracking</h3><p>Sessions are recorded automatically while a game runs. See where your hours go.</p></div>
+        <div class="card"><div class="icon">🎯</div><h3>Goals</h3><p>Set play-time goals per game. A goal starts from the time you already played.</p></div>
+        <div class="card"><div class="icon">🧭</div><h3>Focus and insights</h3><p>Choose a main game for your dashboard and get simple coaching on your habits.</p></div>
+        <div class="card"><div class="icon">➕</div><h3>Any game</h3><p>Add anything with an <code>.exe</code>. Correct the name and path whenever you need.</p></div>
+        <div class="card"><div class="icon">🔒</div><h3>Private by design</h3><p>No account and no cloud. Your data stays in a local database on your PC.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Supported launchers</h2>
+      <div class="platforms">
+        <span class="chip">Steam</span>
+        <span class="chip">Epic Games</span>
+        <span class="chip">Riot Games</span>
+        <span class="chip">Xbox / Microsoft Store</span>
+        <span class="chip">GOG Galaxy</span>
+        <span class="chip">Ubisoft Connect</span>
+        <span class="chip">EA (legacy)</span>
+        <span class="chip">Rockstar Games Launcher</span>
+        <span class="chip">Hytale</span>
+        <span class="chip">Any .exe</span>
+        <span class="chip todo">Battle.net (planned)</span>
+        <span class="chip todo">itch.io (planned)</span>
+        <span class="chip todo">EA app (planned)</span>
+      </div>
+      <p class="note">GameFocus reads only the places where each launcher records its installs. It does not scan your disks.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Get started</h2>
+      <ol class="steps">
+        <li>Download <code>GameFocus-0.1.0-win-x64.zip</code> from the <a href="https://github.com/DITONGO21/GameFocus/releases/latest">latest release</a> and extract it.</li>
+        <li>Run <code>GameFocus.UI.exe</code>. It requires the .NET 10 Desktop Runtime.</li>
+        <li>Click <strong>Import games</strong> in the Library to find your installed games.</li>
+        <li>Play as usual. GameFocus records your sessions and updates your goals.</li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      GameFocus is released under the <a href="https://github.com/DITONGO21/GameFocus/blob/main/LICENSE">MIT License</a>.
+      · <a href="https://github.com/DITONGO21/GameFocus">Source code</a>
+      · <a href="https://github.com/DITONGO21/GameFocus/issues">Report an issue</a>
+    </div>
+  </footer>
+
+</body>
+</html>
