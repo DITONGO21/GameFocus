@@ -2,15 +2,19 @@
 [Setup]
 AppName=GameFocus
 AppVersion=0.1.0
-DefaultDirName={pf}\GameFocus
+DefaultDirName={autopf}\GameFocus
 DefaultGroupName=GameFocus
+ArchitecturesAllowed=x64compatible
+ArchitecturesInstallIn64BitMode=x64compatible
+SetupIconFile=..\assets\logo.ico
+UninstallDisplayIcon={app}\GameFocus.UI.exe
 OutputDir=..\artifacts\installer
 OutputBaseFilename=GameFocus-Setup
 Compression=lzma2
 SolidCompression=yes
 
 [Files]
-Source: "..\artifacts\GameFocus-win-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\artifacts\folder\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 ; Use the actual published executable name (GameFocus.UI.exe). If you changed the project
