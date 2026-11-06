@@ -1,0 +1,38 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+[Pp]ublish/
+[Aa]rtifacts/
+*.nupkg
+*.snupkg
+
+# Visual Studio / editors
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+TestResults/
+*.binlog
+
+# Local runtime data (databases, logs, settings contain personal data)
+*.db
+*.db-shm
+*.db-wal
+*.log
+logs/
+
+# Developer scratch files and dumps
+*.txt.bak
+testdiag.txt
+preprocessed.txt
+HandleStopAsync.txt
+info.txt
+*.slnx.bak
+*.slnx.vazio
+
+# Installer output
+installer/Output/
+*.exe.config

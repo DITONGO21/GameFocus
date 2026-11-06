@@ -1,0 +1,122 @@
+<Page
+    x:Class="GameFocus.UI.Views.GoalsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="Transparent">
+
+    <Grid RowSpacing="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Spacing="4">
+            <TextBlock Text="Smart goals" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock Text="Set goals and track your gaming progress." 
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+        </StackPanel>
+
+        <!-- Action Bar -->
+        <Button Grid.Row="1" Style="{StaticResource AccentButtonStyle}" 
+                Content="+ New goal" Click="AddGoal_Click"/>
+
+        <!-- Goals List -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!-- Empty State -->
+                <StackPanel x:Name="EmptyState" Visibility="Collapsed"
+                            HorizontalAlignment="Center" Spacing="12" Margin="0,60,0,0">
+                    <TextBlock Text="&#xE9D5;" FontFamily="Segoe Fluent Icons" FontSize="48"
+                               HorizontalAlignment="Center"
+                               Foreground="{ThemeResource TextFillColorDisabledBrush}"/>
+                    <TextBlock Text="No goals yet!" FontSize="18" FontWeight="SemiBold"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="Create your first goal to stay focused."
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Goals Items -->
+                <ItemsRepeater x:Name="GoalsRepeater" ItemsSource="{x:Bind ViewModel.Goals, Mode=OneWay}">
+                    <ItemsRepeater.Layout>
+                        <StackLayout Spacing="12"/>
+                    </ItemsRepeater.Layout>
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    BorderThickness="1" CornerRadius="8" Padding="20">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="{Binding Title}" FontSize="16" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding Game.Name}" 
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <Border Background="{ThemeResource AccentFillColorDefaultBrush}" 
+                                                    CornerRadius="4" Padding="8,2">
+                                                <TextBlock Text="{Binding Type}" FontSize="11" Foreground="White"/>
+                                            </Border>
+                                        </StackPanel>
+                                        <ProgressBar Value="{Binding CurrentValue}" Maximum="{Binding TargetValue}" 
+                                                     Height="8" CornerRadius="4" Margin="0,4,0,0"/>
+                                        <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                                            <Run Text="{Binding CurrentValue}"/>
+                                            <Run Text=" / "/>
+                                            <Run Text="{Binding TargetValue}"/>
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" 
+                                                VerticalAlignment="Top">
+                                        <Button Content="&#xE930;" FontFamily="Segoe Fluent Icons" 
+                                                ToolTipService.ToolTip="Completar"
+                                                Tag="{Binding}" Click="Complete_Click"/>
+                                        <Button Content="&#xE74D;" FontFamily="Segoe Fluent Icons" 
+                                                ToolTipService.ToolTip="Eliminar"
+                                                Tag="{Binding}" Click="Delete_Click"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                </ItemsRepeater>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Add Goal Dialog -->
+        <ContentDialog x:Name="AddGoalDialog" Title="New goal"
+                        PrimaryButtonText="Create" CloseButtonText="Cancel"
+                        PrimaryButtonClick="AddGoalDialog_PrimaryButtonClick"
+                        DefaultButton="Primary">
+            <StackPanel Spacing="16" MinWidth="360">
+                <TextBox x:Name="GoalTitleBox" Header="Goal title" 
+                         PlaceholderText="e.g. Play 100 hours of CS2"/>
+                <ComboBox x:Name="GameCombo" Header="Linked game" 
+                          ItemsSource="{x:Bind ViewModel.Games, Mode=OneWay}"
+                          DisplayMemberPath="Name" HorizontalAlignment="Stretch"/>
+                <ComboBox x:Name="GoalTypeCombo" Header="Goal type" 
+                          HorizontalAlignment="Stretch" SelectedIndex="0">
+                    <x:String>Minutos Jogados</x:String>
+                    <x:String>Dias Consecutivos</x:String>
+                    <x:String>Dias de Lealdade</x:String>
+                    <x:String>Completar Campanha</x:String>
+                    <x:String>Subir de Rank</x:String>
+                    <x:String>Conquistas</x:String>
+                    <x:String>Personalizado</x:String>
+                </ComboBox>
+                <NumberBox x:Name="TargetValueBox" Header="Target value" Value="60" 
+                           Minimum="1" SpinButtonPlacementMode="Inline"/>
+            </StackPanel>
+        </ContentDialog>
+    </Grid>
+</Page>

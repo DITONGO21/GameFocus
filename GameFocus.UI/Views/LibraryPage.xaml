@@ -1,0 +1,138 @@
+<Page
+    x:Class="GameFocus.UI.Views.LibraryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:GameFocus.UI.Converters"
+    mc:Ignorable="d"
+    Background="Transparent">
+
+    <Page.Resources>
+        <converters:GameSourceTextConverter x:Key="GameSourceText"/>
+        <converters:ManualSourceVisibilityConverter x:Key="ManualSourceVisibility"/>
+    </Page.Resources>
+
+    <Grid RowSpacing="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Spacing="4">
+            <TextBlock Text="Library" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock Text="Manage your games and set your focus."
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+            <TextBlock Text="{x:Bind ViewModel.FocusStatusText, Mode=OneWay}" FontWeight="SemiBold"/>
+        </StackPanel>
+
+        <!-- Action Bar -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="12">
+            <TextBox x:Name="SearchBox" PlaceholderText="Search games..." Width="250"
+                     TextChanged="SearchBox_TextChanged"/>
+            <Button Content="Import games" Click="ImportSteam_Click">
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control" Key="I"/>
+                </Button.KeyboardAccelerators>
+            </Button>
+            <Button Content="Pause all" Click="PauseAll_Click"/>
+            <Button Style="{StaticResource AccentButtonStyle}" Content="+ Add game" 
+                    Click="AddGame_Click"/>
+        </StackPanel>
+
+        <!-- Games Grid -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!-- Empty State -->
+                <StackPanel x:Name="EmptyState" Visibility="Collapsed" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center" 
+                            Spacing="12" Margin="0,60,0,0">
+                    <TextBlock Text="&#xE7FC;" FontFamily="Segoe Fluent Icons" FontSize="48"
+                               HorizontalAlignment="Center"
+                               Foreground="{ThemeResource TextFillColorDisabledBrush}"/>
+                    <TextBlock Text="Your library is empty!" FontSize="18" FontWeight="SemiBold"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="Click 'Import games' or 'Add game' to get started."
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Games List -->
+                <ItemsRepeater x:Name="GamesRepeater" ItemsSource="{x:Bind ViewModel.Games, Mode=OneWay}">
+                    <ItemsRepeater.Layout>
+                        <UniformGridLayout MinItemWidth="280" 
+                                           MinColumnSpacing="12" MinRowSpacing="12"/>
+                    </ItemsRepeater.Layout>
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    BorderThickness="1" CornerRadius="8" Padding="20">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" 
+                                               TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding Developer}" 
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               FontSize="12"/>
+                                    <TextBlock Text="{Binding Source, Converter={StaticResource GameSourceText}}"
+                                               FontSize="12" FontWeight="SemiBold"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Border Background="{ThemeResource AccentFillColorDefaultBrush}" 
+                                                CornerRadius="4" Padding="8,2">
+                                            <TextBlock Text="{Binding Status}" FontSize="11" 
+                                                       Foreground="White"/>
+                                        </Border>
+                                    </StackPanel>
+                                    <!-- No fixed ItemHeight: a fixed height smaller than the button clipped the button text. -->
+                                    <VariableSizedWrapGrid Orientation="Horizontal" HorizontalAlignment="Stretch"
+                                                           ItemWidth="110" Margin="0,8,0,0">
+                                        <Button Content="Play" FontSize="12" MinWidth="100" Margin="0,0,8,8"
+                                                Tag="{Binding}" Click="Play_Click"/>
+                                        <Button Content="Set focus" FontSize="12" MinWidth="100" Margin="0,0,8,8"
+                                                Tag="{Binding}" Click="SetFocus_Click"/>
+                                        <Button Content="Edit" FontSize="12" MinWidth="100" Margin="0,0,8,8"
+                                                Tag="{Binding}" Click="EditGame_Click"
+                                                Visibility="{Binding Source, Converter={StaticResource ManualSourceVisibility}}"/>
+                                        <Button Content="Remove" FontSize="12" MinWidth="100" Margin="0,0,8,8"
+                                                Tag="{Binding}" Click="Delete_Click"/>
+                                    </VariableSizedWrapGrid>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                </ItemsRepeater>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Add Game Dialog -->
+        <ContentDialog x:Name="AddGameDialog" Title="Add new game" 
+                        PrimaryButtonText="Add" CloseButtonText="Cancel"
+                        PrimaryButtonClick="AddGameDialog_PrimaryButtonClick"
+                        DefaultButton="Primary">
+            <StackPanel Spacing="16" MinWidth="320">
+                <TextBox x:Name="GameNameBox" Header="Game name" PlaceholderText="e.g. The Witcher 3"/>
+                <TextBox x:Name="GameDevBox" Header="Developer (optional)" PlaceholderText="e.g. CD Projekt Red"/>
+                <TextBox x:Name="GamePathBox" Header="Executable file" IsReadOnly="True"/>
+                <TextBlock x:Name="AddErrorText" Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                           TextWrapping="Wrap" Visibility="Collapsed"/>
+            </StackPanel>
+        </ContentDialog>
+
+        <!-- Edit Manual Game Dialog -->
+        <ContentDialog x:Name="EditGameDialog" Title="Edit game"
+                        PrimaryButtonText="Save" CloseButtonText="Cancel"
+                        PrimaryButtonClick="EditGameDialog_PrimaryButtonClick"
+                        DefaultButton="Primary">
+            <StackPanel Spacing="16" MinWidth="320">
+                <TextBox x:Name="EditNameBox" Header="Game name"/>
+                <TextBox x:Name="EditPathBox" Header="Executable file" IsReadOnly="True"/>
+                <Button Content="Browse executable..." Click="BrowseEditPath_Click"/>
+                <TextBlock x:Name="EditErrorText" Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                           TextWrapping="Wrap" Visibility="Collapsed"/>
+            </StackPanel>
+        </ContentDialog>
+    </Grid>
+</Page>

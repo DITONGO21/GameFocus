@@ -1,0 +1,150 @@
+<Page
+    x:Class="GameFocus.UI.Views.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:entities="using:GameFocus.Core.Entities"
+    mc:Ignorable="d"
+    Background="Transparent">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,16,0">
+        <StackPanel Spacing="24" Margin="0,0,0,32">
+
+            <!-- Header -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="Welcome back!" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock Text="Here is a summary of your gaming activity." 
+                           Style="{StaticResource BodyTextBlockStyle}" 
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+
+            <!-- Stats Row -->
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Total Games -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1" CornerRadius="8" Padding="20">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="&#xE7FC;" FontFamily="Segoe Fluent Icons" FontSize="24" 
+                                   Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                        <TextBlock Text="{x:Bind ViewModel.TotalGamesCount, Mode=OneWay}" 
+                                   FontSize="32" FontWeight="Bold"/>
+                        <TextBlock Text="Games in library" 
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Weekly Hours -->
+                <Border Grid.Column="1" 
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1" CornerRadius="8" Padding="20">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="&#xE823;" FontFamily="Segoe Fluent Icons" FontSize="24" 
+                                   Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                        <TextBlock Text="{x:Bind ViewModel.WeeklyHoursText, Mode=OneWay}" 
+                                   FontSize="32" FontWeight="Bold"/>
+                        <TextBlock Text="Hours this week" 
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Active Goals -->
+                <Border Grid.Column="2" 
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1" CornerRadius="8" Padding="20">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="&#xE9D5;" FontFamily="Segoe Fluent Icons" FontSize="24" 
+                                   Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                        <TextBlock Text="{x:Bind ViewModel.ActiveGoalsCount, Mode=OneWay}" 
+                                   FontSize="32" FontWeight="Bold"/>
+                        <TextBlock Text="Active goals" 
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Two Column Layout -->
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Spacing="16">
+                    <!-- Coach Suggestion -->
+                    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                            BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
+                            BorderThickness="3,0,0,0" CornerRadius="8" Padding="20">
+                        <StackPanel Spacing="8">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Text="&#xE946;" FontFamily="Segoe Fluent Icons" FontSize="18"
+                                           Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                                <TextBlock Text="Coach suggestion" 
+                                           Style="{StaticResource SubtitleTextBlockStyle}" 
+                                           Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                            </StackPanel>
+                            <TextBlock Text="{x:Bind ViewModel.CoachSuggestion, Mode=OneWay}" 
+                                       TextWrapping="Wrap" LineHeight="22"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Focus Game -->
+                    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1" CornerRadius="8" Padding="20" MinHeight="120">
+                        <StackPanel Spacing="8" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Text="&#xE7FC;" FontFamily="Segoe Fluent Icons" FontSize="18"/>
+                                <TextBlock Text="Current focus game" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            </StackPanel>
+                            <TextBlock Text="{x:Bind ViewModel.MainGameName, Mode=OneWay}"
+                                       FontSize="20" FontWeight="SemiBold"/>
+                            <TextBlock Text="{x:Bind ViewModel.MainGameStatus, Mode=OneWay}"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Text="Go to the Library to choose your main game." 
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" 
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Right Column: Recent Sessions -->
+                <Border Grid.Column="1" 
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1" CornerRadius="8" Padding="20">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Recent sessions" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        
+                        <ListView ItemsSource="{Binding RecentSessions, Mode=OneWay}"
+                                  SelectionMode="None">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="entities:GameSession">
+                                    <StackPanel Padding="0,6">
+                                        <TextBlock Text="{Binding StartTimeUtc, Mode=OneWay}" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding DurationSeconds, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <TextBlock Text="No recent sessions. Start playing!" 
+                                   Foreground="{ThemeResource TextFillColorDisabledBrush}"
+                                   Visibility="{Binding IsBusy, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

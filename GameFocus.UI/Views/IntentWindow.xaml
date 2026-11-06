@@ -1,0 +1,30 @@
+<Window
+    x:Class="GameFocus.UI.Views.IntentWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="GameFocus - Intention">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="20">
+        <StackPanel Spacing="12" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Text="What do you want to do?" Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center"/>
+            <Grid ColumnSpacing="8" RowSpacing="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <Button Content="Relax" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Click="BtnRelaxar_Click"/>
+                <Button Content="Compete" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" Click="BtnCompetir_Click"/>
+                <Button Content="Train" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Click="BtnTreinar_Click"/>
+                <Button Content="Pass time" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Click="BtnPassarTempo_Click"/>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>

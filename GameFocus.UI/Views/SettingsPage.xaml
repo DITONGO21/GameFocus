@@ -1,0 +1,24 @@
+<Page
+    x:Class="GameFocus.UI.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="Transparent">
+
+    <Grid Padding="12">
+        <StackPanel Spacing="12">
+            <TextBlock Text="Settings" Style="{StaticResource TitleTextBlockStyle}"/>
+            <TextBlock Text="Steam install path (optional). If empty, the app tries to detect it automatically."/>
+
+            <TextBox x:Name="SteamPathBox" Header="Steam path" Text="{x:Bind ViewModel.SteamPath, Mode=TwoWay}"/>
+
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Content="Detect Steam" Click="Detect_Click"/>
+                <Button Content="Browse..." Click="Browse_Click"/>
+                <Button Content="Save" Style="{StaticResource AccentButtonStyle}" Click="Save_Click"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>
