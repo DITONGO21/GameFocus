@@ -37,7 +37,7 @@
 
 ```bash
 git clone https://github.com/DITONGO21/GameFocus.git
-cd focojogos
+cd GameFocus
 dotnet build GameFocus.sln
 dotnet test GameFocus.Tests
 ```
