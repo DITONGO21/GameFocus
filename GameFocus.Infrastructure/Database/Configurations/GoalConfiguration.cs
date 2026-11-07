@@ -17,5 +17,8 @@ public class GoalConfiguration : IEntityTypeConfiguration<Goal>
         builder.Property(g => g.Type)
             .HasConversion<string>()
             .HasMaxLength(50);
+
+        builder.Property(g => g.TargetLabel)
+            .HasMaxLength(100);
     }
 }

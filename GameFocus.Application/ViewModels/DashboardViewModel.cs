@@ -32,6 +32,15 @@ public partial class DashboardViewModel : BaseViewModel, IDisposable
     [ObservableProperty]
     private string _mainGameStatus = string.Empty;
 
+    // Session clock: the game being played right now and how long the current session has run.
+    [ObservableProperty]
+    private string _activeGameName = string.Empty;
+
+    [ObservableProperty]
+    private string _elapsedText = "Not playing right now";
+
+    private DateTime? _activeSessionStartUtc;
+
     [ObservableProperty]
     private Goal? _currentGoal;
 
@@ -69,6 +78,21 @@ public partial class DashboardViewModel : BaseViewModel, IDisposable
         Title = "Dashboard";
 
         _publisher.OnSessionUpdated += Publisher_OnSessionUpdated;
+    }
+
+    // Called every second by the page while it is visible. Pure calculation from the session start.
+    public void UpdateElapsed(DateTime utcNow)
+    {
+        ElapsedText = _activeSessionStartUtc.HasValue
+            ? FormatElapsed(utcNow - _activeSessionStartUtc.Value)
+            : "Not playing right now";
+    }
+
+    // hh:mm:ss, with hours that can go past 24.
+    public static string FormatElapsed(TimeSpan elapsed)
+    {
+        if (elapsed < TimeSpan.Zero) elapsed = TimeSpan.Zero;
+        return $"{(int)elapsed.TotalHours:00}:{elapsed.Minutes:00}:{elapsed.Seconds:00}";
     }
 
     private void Publisher_OnSessionUpdated(object? sender, object e)
@@ -111,6 +135,12 @@ public partial class DashboardViewModel : BaseViewModel, IDisposable
             MainGameStatus = focusGame == null
                 ? string.Empty
                 : focusGame.Status == GameStatus.Playing ? "Playing now" : "Paused";
+
+            // Session clock: the session that is running right now, if any.
+            var activeSession = await _unitOfWork.Sessions.GetActiveSessionAsync();
+            _activeSessionStartUtc = activeSession == null ? null : DateTime.SpecifyKind(activeSession.StartTimeUtc, DateTimeKind.Utc);
+            ActiveGameName = activeSession?.Game?.Name ?? string.Empty;
+            UpdateElapsed(DateTime.UtcNow);
 
             // Calculate weekly hours
             var weekStart = DateTime.UtcNow.AddDays(-7);

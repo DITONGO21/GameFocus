@@ -146,6 +146,10 @@ namespace GameFocus.Infrastructure.Migrations
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("TargetLabel")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
                     b.Property<double>("TargetValue")
                         .HasColumnType("REAL");
 

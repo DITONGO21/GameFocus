@@ -13,6 +13,8 @@ public class Goal
     public GoalType Type { get; set; }
     
     public double TargetValue { get; set; }
+    // Text target for goals such as reaching a rank (for example "Diamond"); null for numeric goals.
+    public string? TargetLabel { get; set; }
     public double CurrentValue { get; set; }
     
     public bool IsCompleted { get; set; }

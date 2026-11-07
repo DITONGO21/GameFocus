@@ -45,6 +45,17 @@ public class SessionRepository : ISessionRepository
             .ToListAsync();
     }
 
+    public async Task<GameSession?> GetActiveSessionAsync()
+    {
+        // No tracking: the dashboard reads this on a long-lived context, so it must see new sessions.
+        return await _context.Sessions
+            .AsNoTracking()
+            .Include(s => s.Game)
+            .Where(s => s.EndTimeUtc == null && s.Status == SessionStatus.Active)
+            .OrderByDescending(s => s.StartTimeUtc)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task AddAsync(GameSession session)
     {
         await _context.Sessions.AddAsync(session);

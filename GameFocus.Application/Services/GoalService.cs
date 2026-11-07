@@ -66,11 +66,20 @@ public class GoalService : IGoalService
                     break;
 
                 case GoalType.PlayConsecutiveDays:
-                    // Verificação simplificada de dias consecutivos.
-                    // Para uma implementação completa, cruzar com a tabela de sessões.
-                    var recentSessions = await uow.Sessions.GetByGameIdAsync(gameId);
-                    var daysPlayed = recentSessions.Select(s => s.StartTimeUtc.Date).Distinct().Count();
-                    goal.CurrentValue = daysPlayed;
+                    // Longest run of consecutive days with at least one session for this game.
+                    var sessionsForStreak = await uow.Sessions.GetByGameIdAsync(gameId);
+                    goal.CurrentValue = LongestConsecutiveDays(sessionsForStreak.Select(s => s.StartTimeUtc));
+                    if (goal.CurrentValue >= goal.TargetValue)
+                    {
+                        goal.IsCompleted = true;
+                    }
+                    updated = true;
+                    break;
+
+                case GoalType.LoyaltyDays:
+                    // Total number of different days on which this game was played.
+                    var sessionsForLoyalty = await uow.Sessions.GetByGameIdAsync(gameId);
+                    goal.CurrentValue = sessionsForLoyalty.Select(s => s.StartTimeUtc.ToLocalTime().Date).Distinct().Count();
                     if (goal.CurrentValue >= goal.TargetValue)
                     {
                         goal.IsCompleted = true;
@@ -86,5 +95,36 @@ public class GoalService : IGoalService
         }
 
         await uow.SaveChangesAsync();
+    }
+
+    // Longest streak of consecutive local calendar days that contain at least one of the given session starts.
+    public static int LongestConsecutiveDays(IEnumerable<DateTime> sessionStartsUtc)
+    {
+        var days = sessionStartsUtc
+            .Select(d => d.ToLocalTime().Date)
+            .Distinct()
+            .OrderBy(d => d)
+            .ToList();
+
+        var best = 0;
+        var run = 0;
+        DateTime? previous = null;
+        foreach (var day in days)
+        {
+            run = previous.HasValue && (day - previous.Value).TotalDays == 1 ? run + 1 : 1;
+            best = Math.Max(best, run);
+            previous = day;
+        }
+        return best;
+    }
+
+    // Manual progress for goals that cannot be measured from sessions (campaign, achievements, custom, rank).
+    public static void AddManualProgress(Goal goal)
+    {
+        goal.CurrentValue = Math.Min(goal.CurrentValue + 1, goal.TargetValue);
+        if (goal.CurrentValue >= goal.TargetValue)
+        {
+            goal.IsCompleted = true;
+        }
     }
 }

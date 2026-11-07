@@ -4,8 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:GameFocus.UI.Converters"
     mc:Ignorable="d"
     Background="Transparent">
+
+    <Page.Resources>
+        <converters:GoalTypeTextConverter x:Key="GoalTypeText"/>
+        <converters:GoalTargetTextConverter x:Key="GoalTargetText"/>
+        <converters:ManualGoalVisibilityConverter x:Key="ManualGoalVisibility"/>
+    </Page.Resources>
 
     <Grid RowSpacing="20">
         <Grid.RowDefinitions>
@@ -64,25 +71,26 @@
                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                             <Border Background="{ThemeResource AccentFillColorDefaultBrush}" 
                                                     CornerRadius="4" Padding="8,2">
-                                                <TextBlock Text="{Binding Type}" FontSize="11" Foreground="White"/>
+                                                <TextBlock Text="{Binding Type, Converter={StaticResource GoalTypeText}}" FontSize="11" Foreground="White"/>
                                             </Border>
                                         </StackPanel>
                                         <ProgressBar Value="{Binding CurrentValue}" Maximum="{Binding TargetValue}" 
                                                      Height="8" CornerRadius="4" Margin="0,4,0,0"/>
-                                        <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
-                                            <Run Text="{Binding CurrentValue}"/>
-                                            <Run Text=" / "/>
-                                            <Run Text="{Binding TargetValue}"/>
-                                        </TextBlock>
+                                        <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                   Text="{Binding Converter={StaticResource GoalTargetText}}"/>
                                     </StackPanel>
 
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" 
                                                 VerticalAlignment="Top">
+                                        <Button Content="+1" FontSize="12"
+                                                ToolTipService.ToolTip="Add one unit of progress"
+                                                Tag="{Binding}" Click="Increment_Click"
+                                                Visibility="{Binding Converter={StaticResource ManualGoalVisibility}}"/>
                                         <Button Content="&#xE930;" FontFamily="Segoe Fluent Icons" 
-                                                ToolTipService.ToolTip="Completar"
+                                                ToolTipService.ToolTip="Complete"
                                                 Tag="{Binding}" Click="Complete_Click"/>
                                         <Button Content="&#xE74D;" FontFamily="Segoe Fluent Icons" 
-                                                ToolTipService.ToolTip="Eliminar"
+                                                ToolTipService.ToolTip="Delete"
                                                 Tag="{Binding}" Click="Delete_Click"/>
                                     </StackPanel>
                                 </Grid>
@@ -105,17 +113,20 @@
                           ItemsSource="{x:Bind ViewModel.Games, Mode=OneWay}"
                           DisplayMemberPath="Name" HorizontalAlignment="Stretch"/>
                 <ComboBox x:Name="GoalTypeCombo" Header="Goal type" 
-                          HorizontalAlignment="Stretch" SelectedIndex="0">
-                    <x:String>Minutos Jogados</x:String>
-                    <x:String>Dias Consecutivos</x:String>
-                    <x:String>Dias de Lealdade</x:String>
-                    <x:String>Completar Campanha</x:String>
-                    <x:String>Subir de Rank</x:String>
-                    <x:String>Conquistas</x:String>
-                    <x:String>Personalizado</x:String>
+                          HorizontalAlignment="Stretch" SelectedIndex="0"
+                          SelectionChanged="GoalTypeCombo_SelectionChanged">
+                    <x:String>Play time (minutes)</x:String>
+                    <x:String>Consecutive play days</x:String>
+                    <x:String>Loyalty (days played)</x:String>
+                    <x:String>Complete campaign</x:String>
+                    <x:String>Reach a rank</x:String>
+                    <x:String>Achievements</x:String>
+                    <x:String>Custom</x:String>
                 </ComboBox>
                 <NumberBox x:Name="TargetValueBox" Header="Target value" Value="60" 
                            Minimum="1" SpinButtonPlacementMode="Inline"/>
+                <TextBox x:Name="TargetLabelBox" Header="Target rank" Visibility="Collapsed"
+                         PlaceholderText="e.g. Diamond"/>
             </StackPanel>
         </ContentDialog>
     </Grid>

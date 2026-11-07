@@ -37,6 +37,9 @@ public partial class GoalsViewModel : BaseViewModel
     private double _newGoalTargetValue = 60;
 
     [ObservableProperty]
+    private string _newGoalTargetLabel = string.Empty;
+
+    [ObservableProperty]
     private bool _hasGoals;
 
     [ObservableProperty]
@@ -91,7 +94,9 @@ public partial class GoalsViewModel : BaseViewModel
             Title = NewGoalTitle.Trim(),
             GameId = SelectedGameForGoal.Id,
             Type = goalType,
-            TargetValue = NewGoalTargetValue,
+            // A rank goal is reached by name, not by a number: its target is text and it is completed manually.
+            TargetValue = goalType == GoalType.RankUp ? 1 : NewGoalTargetValue,
+            TargetLabel = goalType == GoalType.RankUp ? NewGoalTargetLabel.Trim() : null,
             CurrentValue = 0,
             IsCompleted = false,
             CreatedAt = DateTime.UtcNow
@@ -105,9 +110,24 @@ public partial class GoalsViewModel : BaseViewModel
 
         NewGoalTitle = string.Empty;
         NewGoalTargetValue = 60;
+        NewGoalTargetLabel = string.Empty;
 
         await LoadDataAsync();
     }
+
+    // Adds one unit of manual progress (campaign, achievements, custom goals).
+    [RelayCommand]
+    public async Task IncrementGoalAsync(Goal? goal)
+    {
+        if (goal == null || goal.IsCompleted) return;
+
+        AddManualProgressTo(goal);
+        _unitOfWork.Goals.Update(goal);
+        await _unitOfWork.SaveChangesAsync();
+        await LoadDataAsync();
+    }
+
+    private static void AddManualProgressTo(Goal goal) => GameFocus.Application.Services.GoalService.AddManualProgress(goal);
 
     [RelayCommand]
     public async Task DeleteGoalAsync(Goal? goal)

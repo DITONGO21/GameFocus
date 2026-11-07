@@ -35,13 +35,14 @@ public sealed partial class GoalsPage : Page
         GameCombo.SelectedIndex = -1;
         GoalTypeCombo.SelectedIndex = 0;
         TargetValueBox.Value = 60;
+        TargetLabelBox.Text = string.Empty;
 
         if (!ViewModel.HasGames)
         {
             var noGamesDialog = new ContentDialog
             {
                 Title = "No games",
-                Content = "Adiciona primeiro um jogo na Biblioteca antes de criar um objetivo.",
+                Content = "Add a game to the Library first, before creating a goal.",
                 CloseButtonText = "OK",
                 XamlRoot = this.XamlRoot
             };
@@ -58,9 +59,28 @@ public sealed partial class GoalsPage : Page
         ViewModel.SelectedGameForGoal = GameCombo.SelectedItem as Game;
         ViewModel.SelectedGoalTypeIndex = GoalTypeCombo.SelectedIndex;
         ViewModel.NewGoalTargetValue = TargetValueBox.Value;
+        ViewModel.NewGoalTargetLabel = TargetLabelBox.Text;
 
         await ViewModel.AddGoalCommand.ExecuteAsync(null);
         UpdateEmptyState();
+    }
+
+    // Rank goals take a rank name instead of a number.
+    private void GoalTypeCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (TargetValueBox == null || TargetLabelBox == null) return;
+
+        var isRank = GoalTypeCombo.SelectedIndex == (int)GameFocus.Core.Entities.GoalType.RankUp;
+        TargetValueBox.Visibility = isRank ? Visibility.Collapsed : Visibility.Visible;
+        TargetLabelBox.Visibility = isRank ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private async void Increment_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is Goal goal)
+        {
+            await ViewModel.IncrementGoalCommand.ExecuteAsync(goal);
+        }
     }
 
     private async void Complete_Click(object sender, RoutedEventArgs e)

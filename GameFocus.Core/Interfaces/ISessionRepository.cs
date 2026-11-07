@@ -11,6 +11,7 @@ public interface ISessionRepository
     Task<IEnumerable<GameSession>> GetAllAsync();
     Task<IEnumerable<GameSession>> GetByGameIdAsync(int gameId);
     Task<IEnumerable<GameSession>> GetSessionsInDateRangeAsync(DateTime start, DateTime end);
+    Task<GameSession?> GetActiveSessionAsync();
     
     Task AddAsync(GameSession session);
     void Update(GameSession session);
