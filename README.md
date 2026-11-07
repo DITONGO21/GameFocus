@@ -36,7 +36,7 @@
 ## Build and run
 
 ```bash
-git clone https://github.com/DITONGO21/focojogos.git
+git clone https://github.com/DITONGO21/GameFocus.git
 cd focojogos
 dotnet build GameFocus.sln
 dotnet test GameFocus.Tests
